@@ -1,0 +1,270 @@
+POST http://localhost:8080/category
+Content-Type: application/json
+
+{
+  "name": "dog"
+}
+
+###
+POST http://localhost:8080/category
+Content-Type: application/json
+
+{
+  "name": "cat"
+}
+
+###
+
+POST http://localhost:8080/tag
+Content-Type: application/json
+
+{
+  "name": "health"
+}
+
+###
+
+POST http://localhost:8080/tag
+Content-Type: application/json
+
+{
+  "name": "cat"
+}
+
+###
+
+POST http://localhost:8080/tag
+Content-Type: application/json
+
+{
+  "name": "dog"
+}
+
+###
+
+POST http://localhost:8080/tag
+Content-Type: application/json
+
+{
+  "name": "friend"
+}
+
+###
+
+POST http://localhost:8080/tag
+Content-Type: application/json
+
+{
+  "name": "good"
+}
+
+###
+POST http://localhost:8080/pet
+Content-Type: application/json
+
+{
+  "category": {
+    "id": 1
+  },
+  "name": "Baddy",
+  "tags": [
+    {
+      "id": 2
+    },
+    {
+      "id": 4
+    }
+  ],
+  "petStatus":"AVAILABLE"
+}
+###
+
+
+POST http://localhost:8080/pet
+Content-Type: application/json
+
+{
+  "category": {
+    "id": 2
+  },
+  "name": "Ted",
+  "tags": [
+    {
+      "id": 1
+    },
+    {
+      "id": 3
+    }
+  ],
+  "petStatus":"AVAILABLE"
+}
+###
+
+POST http://localhost:8080/pet
+Content-Type: application/json
+
+{
+  "category": {
+    "id": 1
+  },
+  "name": "Barry",
+  "tags": [
+    {
+      "id": 1
+    },
+    {
+      "id": 3
+    },
+    {
+      "id": 3
+    }
+  ],
+  "petStatus":"AVAILABLE"
+}
+###
+GET http://localhost:8080/pet/2
+Content-Type: application/json
+###
+
+DELETE http://localhost:8080/pet/1
+Content-Type: application/json
+
+###
+GET http://localhost:8080/pet/findByStatus?status=AVAILABLE
+Content-Type: application/json
+###
+PUT http://localhost:8080/pet
+Content-Type: application/json
+
+{
+  "id": 2,
+  "category": {
+    "id": 1
+  },
+  "name": "Mike",
+  "tags": [
+    {
+      "id": 2
+    },
+    {
+      "id": 1
+    },
+    {
+      "id": 4
+    }
+  ],
+  "petStatus":"SOLD"
+}
+###
+
+POST http://localhost:8080/store/order
+Content-Type: application/json
+
+{
+  "petId": 1,
+  "quantity": 2,
+  "orderStatus": "DELIVERED",
+  "complete": true
+
+}
+###
+
+GET http://localhost:8080/store/inventory
+Content-Type: application/json
+
+###
+
+GET http://localhost:8080/store/order/3
+Content-Type: application/json
+
+###
+
+DELETE http://localhost:8080/store/order/2
+Content-Type: application/json
+
+###
+POST http://localhost:8080/user
+Content-Type: application/json
+
+{
+  "id": 0,
+  "username": "petr811",
+  "firstName": "Pyotr",
+  "lastName": "Shamburov",
+  "email": "petro-92@mail.ru",
+  "password": "1234",
+  "phone": "80295117730",
+  "userStatus": 0
+}
+
+###
+
+POST http://localhost:8080/user
+Content-Type: application/json
+
+{
+  "id": 0,
+  "username": "Ivan81123",
+  "firstName": "Ivan",
+  "lastName": "Ivanov",
+  "email": "iva-92@mail.ru",
+  "password": "1234",
+  "phone": "802951456730",
+  "userStatus": 2
+}
+
+###
+
+PUT http://localhost:8080/user/Ivan
+Content-Type: application/json
+
+{
+  "id": 0,
+  "username": "Ivan81",
+  "firstName": "Ivan",
+  "lastName": "Ivanov",
+  "email": "iva-34@mail.com",
+  "password": "1234",
+  "phone": "802951456730",
+  "userStatus": 1
+}
+
+###
+POST http://localhost:8080/user/createWithList
+Content-Type: application/json
+
+[
+  {
+    "id": 0,
+    "username": "Martin12",
+    "firstName": "Mark",
+    "lastName": "Ivanov",
+    "email": "iva-34@mail.com",
+    "password": "1234",
+    "phone": "802951456730",
+    "userStatus": 4
+
+},
+  {
+    "id": 0,
+    "username": "Nik124",
+    "firstName": "Nik",
+    "lastName": "Ivanov",
+    "email": "iva-34@mail.com",
+    "password": "1234",
+    "phone": "802951456730",
+    "userStatus": 1
+  }
+]
+
+###
+
+GET http://localhost:8080/user/Martin12
+Content-Type: application/json
+
+###
+
+DELETE http://localhost:8080/user/Martin12
+Content-Type: application/json
+
+###
