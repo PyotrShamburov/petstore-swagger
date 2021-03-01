@@ -1,6 +1,7 @@
 package by.tms.home.storage.pet;
 
 import by.tms.home.model.Category;
+import by.tms.home.model.exception.EntityAlreadyExistsException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -12,8 +13,11 @@ public class CategoryStorage {
     private List<Category> categoryList = new ArrayList<>();
 
     public boolean save(Category category) {
-        category.setId(id++);
-        return categoryList.add(category);
+        if (!contains(category)) {
+            category.setId(id++);
+            return categoryList.add(category);
+        }
+        throw new EntityAlreadyExistsException("Category with this name already exists!");
     }
 
     public Category getById(long id) {
@@ -23,5 +27,9 @@ public class CategoryStorage {
             }
         }
         return null;
+    }
+
+    public boolean contains(Category category) {
+        return categoryList.contains(category);
     }
 }

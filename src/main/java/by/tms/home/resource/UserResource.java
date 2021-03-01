@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/user")
@@ -17,7 +19,7 @@ public class UserResource {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody User user) {
+    public ResponseEntity<String> createUser(@Valid @RequestBody User user) {
         if (userService.addNewUser(user)) {
             return new ResponseEntity<>("User with username: " + user.getUsername() + " - SAVED!", HttpStatus.CREATED);
         }
@@ -25,19 +27,16 @@ public class UserResource {
     }
 
     @PostMapping(path = "/createWithArray")
-    public ResponseEntity<String> createUsersWithArray(@RequestBody User[] users) {
-        if (userService.addUsersFromArray(users)) {
-            return new ResponseEntity<>("Users from array - SAVED!", HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>("User not saved!", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Map<String, String>> createUsersWithArray(@Valid @RequestBody User[] users) {
+        Map<String, String> resultOfSaving = userService.addUsersFromArray(users);
+        return new ResponseEntity<>(resultOfSaving, HttpStatus.CREATED);
     }
 
     @PostMapping(path = "/createWithList")
-    public ResponseEntity<String> createUsersWithList(@RequestBody List<User> users) {
-        if (userService.addUsersFromList(users)) {
-            return new ResponseEntity<>("Users from array - SAVED!", HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>("User not saved!", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Map<String, String>> createUsersWithList(@Valid @RequestBody List<User> users) {
+        Map<String, String> resultOfSaving = userService.addUsersFromList(users);
+        return new ResponseEntity<>(resultOfSaving, HttpStatus.CREATED);
+
     }
 
     @GetMapping(path = "/{username}")
@@ -47,7 +46,7 @@ public class UserResource {
             if (userByUsername != null) {
                 return new ResponseEntity<>(userByUsername, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -55,15 +54,15 @@ public class UserResource {
     }
 
     @PutMapping(path = "/{username}")
-    public ResponseEntity<String> updateUser(@PathVariable String username, @RequestBody User newUser) {
+    public ResponseEntity<String> updateUser(@PathVariable String username, @Valid @RequestBody User newUser) {
         if (username.matches("^[a-zA-Z0-9]{3,25}$")) {
             if (userService.updateUser(username, newUser)) {
                 return new ResponseEntity<>(username + " - UPDATED!", HttpStatus.OK);
             } else {
-                return new ResponseEntity<>("User not found!", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("User not found!", HttpStatus.NOT_FOUND);
             }
         } else {
-            return new ResponseEntity<>("Invalid user supplied!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Invalid username supplied!", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -73,10 +72,10 @@ public class UserResource {
             if (userService.deleteUserByUsername(username)) {
                 return new ResponseEntity<>(username + " - DELETED!", HttpStatus.OK);
             } else {
-                return new ResponseEntity<>("User not found!", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("User not found!", HttpStatus.NOT_FOUND);
             }
         } else {
-            return new ResponseEntity<>("Invalid user supplied!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Invalid username supplied!", HttpStatus.BAD_REQUEST);
         }
     }
 }

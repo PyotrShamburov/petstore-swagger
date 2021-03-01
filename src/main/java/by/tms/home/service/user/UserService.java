@@ -1,12 +1,13 @@
 package by.tms.home.service.user;
 
 import by.tms.home.model.User;
-import by.tms.home.model.exception.UserNotFoundException;
 import by.tms.home.storage.user.UserStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -17,24 +18,28 @@ public class UserService {
         return userStorage.save(user);
     }
 
-    public boolean addUsersFromArray(User[] users) {
-        int counterOfSave = 0;
+    public Map<String, String> addUsersFromArray(User[] users) {
+        Map<String, String> resultOfSaving = new HashMap<>();
         for (User user : users) {
             if (userStorage.save(user)) {
-                ++counterOfSave;
+               resultOfSaving.put(user.getUsername(), "SAVED");
+            } else {
+                resultOfSaving.put(user.getUsername(), "NOT SAVED!");
             }
         }
-        return counterOfSave == users.length;
+        return resultOfSaving;
     }
 
-    public boolean addUsersFromList(List<User> users) {
-        int counterOfSave = 0;
+    public Map<String, String> addUsersFromList(List<User> users) {
+        Map<String, String> resultOfSaving = new HashMap<>();
         for (User user : users) {
             if (userStorage.save(user)) {
-                ++counterOfSave;
+                resultOfSaving.put(user.getUsername(), "SAVED");
+            } else {
+                resultOfSaving.put(user.getUsername(), "NOT SAVED!");
             }
         }
-        return counterOfSave == users.size();
+        return resultOfSaving;
     }
 
     public User getUserByUsername(String username) {

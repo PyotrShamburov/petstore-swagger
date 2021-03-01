@@ -22,30 +22,26 @@ public class PetService {
     private CategoryService categoryService;
 
     public boolean addPetToStorage(Pet pet) {
-        if (addCategoryToPet(pet) && addTagsToPet(pet)) {
-            return petStorage.save(pet);
-        }
-        return false;
+        addCategoryToPet(pet);
+        addTagsToPet(pet);
+        return petStorage.save(pet);
     }
 
 
-    public boolean addCategoryToPet(Pet pet) {
+    public void addCategoryToPet(Pet pet) {
         Category category = (Category) categoryService.getById(pet.getCategory().getId());
-        if (category != null){
+        if (category != null) {
             pet.setCategory(category);
-            return true;
         }
-        return false;
     }
 
-    public boolean addTagsToPet(Pet pet) {
+    public void addTagsToPet(Pet pet) {
         List<Tag> petTags = new ArrayList<>();
         for (Tag tag : pet.getTags()) {
             Tag byId = tagService.getById(tag.getId());
             petTags.add(byId);
         }
         pet.setTags(petTags);
-        return petTags.size() != 0;
     }
 
     public boolean updatePet(Pet newPet) {
@@ -53,10 +49,10 @@ public class PetService {
     }
 
     public Pet getById(long id) {
-       return petStorage.getById(id);
+        return petStorage.getById(id);
     }
 
-    public List<Pet> getByStatus(PetStatusEnum status) {
+    public List<Pet> getByStatus(String status) {
         return petStorage.getByStatus(status);
     }
 

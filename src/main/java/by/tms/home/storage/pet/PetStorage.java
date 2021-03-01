@@ -1,7 +1,8 @@
 package by.tms.home.storage.pet;
 
 import by.tms.home.model.Pet;
-import by.tms.home.model.enums.PetStatusEnum;
+import by.tms.home.model.exception.EntityAlreadyExistsException;
+import by.tms.home.model.exception.EntityNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -13,8 +14,11 @@ public class PetStorage {
     private List<Pet> petList = new ArrayList<>();
 
     public boolean save(Pet pet) {
-        pet.setId(id++);
-        return petList.add(pet);
+        if (!contains(pet)) {
+            pet.setId(id++);
+            return petList.add(pet);
+        }
+        throw  new EntityAlreadyExistsException("Pet with this name already exists!");
     }
 
     public boolean change(Pet newPet) {
@@ -26,7 +30,7 @@ public class PetStorage {
                 return true;
             }
         }
-        return false;
+        throw new EntityNotFoundException("Pet with this ID does not found!");
     }
 
     public Pet getById(long id) {
@@ -35,13 +39,13 @@ public class PetStorage {
                 return pet;
             }
         }
-        return null;
+        throw new EntityNotFoundException("Pet with this ID does not found!");
     }
 
-    public List<Pet> getByStatus(PetStatusEnum status) {
+    public List<Pet> getByStatus(String status) {
         List<Pet> petsByStatus = new ArrayList<>();
         for (Pet pet : petList) {
-            if (pet.getPetStatus().equals(status)) {
+            if (pet.getPetStatus().toString().equals(status.trim().toUpperCase())) {
                 petsByStatus.add(pet);
             }
         }
@@ -55,6 +59,10 @@ public class PetStorage {
                 return true;
             }
         }
-        return false;
+        throw new EntityNotFoundException("Pet with this ID does not exist!");
+    }
+
+    public boolean contains(Pet pet) {
+        return petList.contains(pet);
     }
 }

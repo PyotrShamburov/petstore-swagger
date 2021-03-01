@@ -1,6 +1,7 @@
 package by.tms.home.storage.pet;
 
 import by.tms.home.model.Tag;
+import by.tms.home.model.exception.EntityAlreadyExistsException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -12,8 +13,11 @@ public class TagStorage {
     private List<Tag> tagList = new ArrayList<>();
 
     public boolean save(Tag tag) {
-        tag.setId(id++);
-        return tagList.add(tag);
+        if (!contains(tag)) {
+            tag.setId(id++);
+            return tagList.add(tag);
+        }
+        throw new EntityAlreadyExistsException("Tag with name already exists!");
     }
 
     public Tag getById(long id) {
@@ -23,5 +27,9 @@ public class TagStorage {
             }
         }
         return null;
+    }
+
+    public boolean contains(Tag tag) {
+        return tagList.contains(tag);
     }
 }

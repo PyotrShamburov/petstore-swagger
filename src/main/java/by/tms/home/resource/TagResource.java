@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(path = "/tag")
 public class TagResource {
@@ -18,7 +20,7 @@ public class TagResource {
     private TagService tagService;
 
     @PostMapping
-    public ResponseEntity<Tag> addNewTag(@RequestBody Tag tag) {
+    public ResponseEntity<Tag> addNewTag(@Valid @RequestBody Tag tag) {
         if (tagService.saveTag(tag)) {
             return new ResponseEntity<>(tag, HttpStatus.OK);
         }

@@ -1,7 +1,8 @@
 package by.tms.home.storage.user;
 
 import by.tms.home.model.User;
-import by.tms.home.model.exception.UserNotFoundException;
+import by.tms.home.model.exception.EntityAlreadyExistsException;
+import by.tms.home.model.exception.EntityNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -13,12 +14,21 @@ public class UserStorage {
     private List<User> userList = new ArrayList<>();
 
     public boolean save(User user) {
-        user.setId(id++);
-        return userList.add(user);
+        if (!contains(user)) {
+            user.setId(id++);
+            return userList.add(user);
+        }
+       throw new EntityAlreadyExistsException("User with this username already exists!");
     }
 
     public boolean delete(String username) {
-        return userList.removeIf(user -> user.getUsername().equals(username));
+        for (User user : userList) {
+            if (user.getUsername().equals(username)) {
+                userList.remove(user);
+                return true;
+            }
+        }
+        throw new EntityNotFoundException("User with this username does not exist!");
     }
 
     public boolean update(String username, User newUser) {
@@ -29,7 +39,7 @@ public class UserStorage {
                 return true;
             }
         }
-        return false;
+        throw new EntityNotFoundException("User with this username does not exist!");
     }
 
     public User getByName(String username) {
@@ -38,6 +48,10 @@ public class UserStorage {
                 return user;
             }
         }
-        return null;
+        throw new EntityNotFoundException("User with this username not found!");
+    }
+
+    public boolean contains(User user) {
+        return userList.contains(user);
     }
 }

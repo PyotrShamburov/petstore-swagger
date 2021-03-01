@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(path = "/category")
 public class CategoryResource {
@@ -18,7 +20,7 @@ public class CategoryResource {
     private CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<Category> addNewCategory(@RequestBody Category category) {
+    public ResponseEntity<Category> addNewCategory(@Valid @RequestBody Category category) {
         if (categoryService.addToStorage(category)) {
             return new ResponseEntity<>(category, HttpStatus.OK);
         }

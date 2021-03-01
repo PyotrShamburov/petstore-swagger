@@ -1,10 +1,8 @@
 package by.tms.home.storage.store;
 
 import by.tms.home.model.Order;
-import by.tms.home.model.enums.OrderStatusEnum;
+import by.tms.home.model.exception.EntityNotFoundException;
 import org.springframework.stereotype.Repository;
-
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -36,11 +34,17 @@ public class StoreStorage {
                 return order;
             }
         }
-        return null;
+        throw new EntityNotFoundException("Order with this ID does not found!");
     }
 
     public boolean delete(long id) {
-       return orderList.removeIf(order -> order.getId() == id);
+        for (Order order : orderList ) {
+            if (order.getId() == id) {
+                orderList.remove(order);
+                return true;
+            }
+        }
+       throw new EntityNotFoundException("Order with this ID does not found!");
     }
 
     public Map<String, Integer> getStatuses() {

@@ -10,6 +10,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,27 +20,30 @@ public class PetResource {
     private PetService petService;
 
     @PostMapping
-    public ResponseEntity<Pet> addNewPet(@RequestBody Pet pet) {
+    public ResponseEntity<Pet> addNewPet(@Valid @RequestBody Pet pet) {
         if (petService.addPetToStorage(pet)) {
             return new ResponseEntity<>(pet, HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
     }
+
     @PutMapping
-    public ResponseEntity<String> updatePet(@RequestBody Pet newPet) {
+    public ResponseEntity<String> updatePet(@Valid @RequestBody Pet newPet) {
         if (petService.updatePet(newPet)) {
             return new ResponseEntity<>("Pet with ID :"+newPet.getId()+" - UPDATED!",HttpStatus.OK);
         }
-        return new ResponseEntity<>("Pet not found!",HttpStatus.BAD_GATEWAY);
+        return new ResponseEntity<>("Pet not found!",HttpStatus.NOT_FOUND);
     }
+
     @GetMapping(path = "/findByStatus")
-    public ResponseEntity<List<Pet>> findByStatus(PetStatusEnum status) {
+    public ResponseEntity<List<Pet>> findByStatus(String status) {
         List<Pet> byStatus = (List<Pet>) petService.getByStatus(status);
         if (byStatus.size()!=0) {
             return new ResponseEntity<>(byStatus, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
     @GetMapping(path = "/{petId}")
     public ResponseEntity<Pet> findById(@PathVariable long petId) {
         Pet byId = (Pet) petService.getById(petId);

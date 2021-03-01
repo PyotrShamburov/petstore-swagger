@@ -1,7 +1,6 @@
 package by.tms.home.service.store;
 
 import by.tms.home.model.Order;
-import by.tms.home.model.enums.OrderStatusEnum;
 import by.tms.home.storage.store.StoreStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
